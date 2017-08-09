@@ -1,21 +1,21 @@
 const Nightmare = require('nightmare');
+const _ = require('lodash');
+const co = require('co');
 const nightmare = Nightmare({ show: true });
 const dotenv = require('dotenv').config({ silent: true });
 
-const addLike = () => {
-  nightmare
-    .click('.js-profile-header-toggle-layout')
-    .wait('.scale-value')
+const addLike = function*() {
+  yield nightmare.wait(500);
+  yield nightmare.click('.js-profile-header-toggle-layout');
+  yield nightmare
     .evaluate(function() {
       return {
-        rating: document.querySelector('.scale-value').innerText,
         location: document.querySelector('.js-location-label').innerText,
       };
     })
-    .then(function({ rating: value, location }) {
-      const rating = value.replace(/,/g, '.');
-      console.log('\t rating', rating, 'location', location);
-      if (rating && 6 < Number(rating) && location === 'Львов') {
+    .then(function({ location }) {
+      console.log('\t Location:   ', location);
+      if (location === 'Львов') {
         console.log('yes -> click');
         return nightmare.type('body', '1');
       } else {
@@ -23,20 +23,23 @@ const addLike = () => {
         return nightmare.type('body', '2');
       }
     })
-    .then(() => {
-      return addLike();
-    });
+    .catch(err => console.log('error like function =>>>', err));
 };
-const loading = () => {
-  nightmare
-    .goto('https://badoo.com/ru/signin/?f=top')
-    .wait('.js-signin-password')
+const loading = function*() {
+  yield nightmare.goto('https://badoo.com/ru/signin/?f=top');
+  yield nightmare.wait('.js-signin-password');
+  yield nightmare
     .type('.js-signin-login', process.env.email)
     .type('.js-signin-password', process.env.password)
-    .click('.sign-form__submit')
+    .click('.sign-form__submit');
+  yield nightmare
     .wait('.js-profile-layout-container')
-    .then(() => {
-      return addLike();
-    });
+    .catch(err => console.log('error =>>>', err));
 };
-loading();
+
+co(function*() {
+  yield loading();
+  for (let i = 0; i < 500; i++) {
+    yield addLike();
+  }
+}).then(() => console.log('finished!'), e => console.log(e));

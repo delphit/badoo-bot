@@ -9,9 +9,11 @@
   "author": "Delphit",
   "license": "ISC",
   "dependencies": {
+    "co": "^4.6.0",
     "dotenv": "^4.0.0",
     "lodash": "^4.17.4",
-    "nightmare": "^2.10.0"
+    "nightmare": "^2.10.0",
+    "vo": "^4.0.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
