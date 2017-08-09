@@ -3,6 +3,7 @@ const _ = require('lodash');
 const co = require('co');
 const nightmare = Nightmare({ show: true });
 const dotenv = require('dotenv').config({ silent: true });
+const { email, password, girlCity } = process.env;
 
 const like = function*() {
   yield nightmare.wait(500);
@@ -16,7 +17,7 @@ const like = function*() {
     })
     .then(function({ location }) {
       console.log('\t Location:   ', location);
-      if (location === 'Львов') {
+      if (location === girlCity) {
         console.log('yes -> click');
         return nightmare.type('body', '1');
       } else {
@@ -26,12 +27,13 @@ const like = function*() {
     })
     .catch(err => console.log('Error in the like function =>>>', err));
 };
+
 const auth = function*() {
   yield nightmare.goto('https://badoo.com/ru/signin/?f=top');
   yield nightmare.wait('.js-signin-password');
   yield nightmare
-    .type('.js-signin-login', process.env.email)
-    .type('.js-signin-password', process.env.password)
+    .type('.js-signin-login', email)
+    .type('.js-signin-password', password)
     .click('.sign-form__submit');
   yield nightmare
     .wait('.js-profile-layout-container')

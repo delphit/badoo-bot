@@ -10,6 +10,7 @@ touch .env   # and add these two lines
                        ```
                        email = "your@email.com"
                        password = "password"
+                       girlCity = "city"
                         ```
 npm run start
 ```
