@@ -7,6 +7,7 @@ const dotenv = require('dotenv').config({ silent: true });
 const addLike = function*() {
   yield nightmare.wait(500);
   yield nightmare.click('.js-profile-header-toggle-layout');
+  yield nightmare.wait('.js-location-label');
   yield nightmare
     .evaluate(function() {
       return {
