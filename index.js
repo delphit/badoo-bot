@@ -4,7 +4,7 @@ const co = require('co');
 const nightmare = Nightmare({ show: true });
 const dotenv = require('dotenv').config({ silent: true });
 
-const addLike = function*() {
+const like = function*() {
   yield nightmare.wait(500);
   yield nightmare.click('.js-profile-header-toggle-layout');
   yield nightmare.wait('.js-location-label');
@@ -24,9 +24,9 @@ const addLike = function*() {
         return nightmare.type('body', '2');
       }
     })
-    .catch(err => console.log('error like function =>>>', err));
+    .catch(err => console.log('Error in the like function =>>>', err));
 };
-const loading = function*() {
+const auth = function*() {
   yield nightmare.goto('https://badoo.com/ru/signin/?f=top');
   yield nightmare.wait('.js-signin-password');
   yield nightmare
@@ -35,12 +35,12 @@ const loading = function*() {
     .click('.sign-form__submit');
   yield nightmare
     .wait('.js-profile-layout-container')
-    .catch(err => console.log('error =>>>', err));
+    .catch(err => console.log('Error in the login function =>>>', err));
 };
 
 co(function*() {
-  yield loading();
-  for (let i = 0; i < 500; i++) {
-    yield addLike();
+  yield auth();
+  for (let i = 0; i < 1000; i++) {
+    yield like();
   }
 }).then(() => console.log('finished!'), e => console.log(e));
