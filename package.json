@@ -1,6 +1,8 @@
 {
-  "name": "Badoo like bot",
-  "private": true,
+  "name": "badoo",
+  "version": "1.0.0",
+  "author": "Delphit",
+  "license": "ISC",
   "scripts": {
     "start": "meteor run",
     "start:prod": "meteor run --production",
