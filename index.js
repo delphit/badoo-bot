@@ -16,7 +16,7 @@ const getContents = (selectors) => {
   let userInfo = {};
   selectors.map(sel => {
     const ele = document.querySelector(sel.selector);
-    return (userInfo[sel.key] = ele && ele.innerHTML);
+    return (userInfo[sel.key] = ele && ele.innerHTML.replace(/\s/g, ''));
   });
   return userInfo;
 }
@@ -27,16 +27,16 @@ const like = function*() {
   yield nightmare.wait(".js-profile-location-container");
   yield nightmare
     .evaluate(getContents, selectors)
-    .then(userInfo => {
+    .then((userInfo) => {
       if (
         userInfo &&
-        (userInfo.location === location || userInfo.score < score)
+        (userInfo.location == location && score < userInfo.score)
       ) {
-        console.log(`\t yes -> click -- Info:   Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
+        console.log(`\t yes -> click -- Info: ${userInfo.location}, Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
         return nightmare.type("body", "1");
       } else {
-        console.log(`\t no -> click -- Info:   Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
-        return nightmare.type("body", "2");
+        console.log(`\t no -> click -- Info: ${userInfo.location}, Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
+        return nightmare.type("body", "2");location
       }
     })
     .catch(e => console.log(e));
