@@ -7,12 +7,10 @@ Development
 * npm install
 * touch .env   # and add these two lines 
 
-                       ```
                        email = "your@email.com"
                        password = "password"
                        location = "Lviv"
                        score = 6
-                       ```
 npm run start
 
 ## Packages
