@@ -6,58 +6,40 @@ const dotenv = require("dotenv").config({ silent: true });
 const { email, password, location, score } = process.env;
 
 const selectors = [
+  { key: "name", selector: ".profile-header__name .ellipsis" },
   { key: "location", selector: ".js-location-label" },
-  { key: "score", selector: ".js-profile-score" },
+  { key: "score", selector: ".scale-value" },
   { key: "interests", selector: ".js-interests-board" }
 ];
 
-const getUserInfo = function(selector) {
-  return nightmare
-    .exists(selector)
-    .then(element => {
-      if (element) {
-        nightmare.evaluate(function(selector) {
-          return document.querySelector(selector).innerText;
-        }, selector);
-      }
-      return false;
-    })
-    .catch(e => console.log("fffffffffffffffffffffff", e));
-};
+const getContents = (selectors) => {
+  let userInfo = {};
+  selectors.map(sel => {
+    const ele = document.querySelector(sel.selector);
+    return (userInfo[sel.key] = ele && ele.innerHTML);
+  });
+  return userInfo;
+}
 
 const like = function*() {
   yield nightmare.wait(500);
   yield nightmare.click(".js-profile-header-toggle-layout");
-  yield nightmare.wait("body");
-  const userInfo = yield selectors.map(url => {
-    return {
-      [url.key]: getUserInfo(url.selector)
-    };
-  });
+  yield nightmare.wait(".js-profile-location-container");
   yield nightmare
-    .evaluate(() => {
-      console.log(
-        "\t Location:",
-        userInfo, // тут ніхера немає...
-        "Score",
-        userInfo.score,
-        "Interests",
-        userInfo.interests
-      );
+    .evaluate(getContents, selectors)
+    .then(userInfo => {
       if (
-        userInfo || // тут ніхера немає...
-        userInfo.location === location ||
-        userInfo.score < score
+        userInfo &&
+        (userInfo.location === location || userInfo.score < score)
       ) {
-        console.log("yes -> click");
+        console.log(`\t yes -> click -- Info:   Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
         return nightmare.type("body", "1");
       } else {
-        console.log("no -> click");
+        console.log(`\t no -> click -- Info:   Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
         return nightmare.type("body", "2");
       }
     })
     .catch(e => console.log(e));
-  console.log("llloooggg", userInfo);
 };
 
 const auth = function*() {
