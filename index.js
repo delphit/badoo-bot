@@ -36,7 +36,7 @@ const like = function*() {
         return nightmare.type("body", "1");
       } else {
         console.log(`\t no -> click -- Info: ${userInfo.location}, Name: ${userInfo.name}, "Score: ${userInfo.score}, Interests": ${userInfo.interests}`);
-        return nightmare.type("body", "2");location
+        return nightmare.type("body", "2");
       }
     })
     .catch(e => console.log(e));
