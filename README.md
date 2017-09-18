@@ -5,11 +5,11 @@
 Development
 * git clone https://github.com/delphit/nigthmare-bot.git && cd nigthmare-bot
 * npm install
-* touch .env   # and add these two lines 
+* And edit .env
 
                        email = "your@email.com"
                        password = "password"
-                       location = "Lviv"
+                       location = "Львов"
                        score = 6
 npm run start
 
